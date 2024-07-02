@@ -88,12 +88,12 @@ services:
       - frontend-net
       - backend-seatable-net
     # healthcheck specifically for dtable-web
-#    healthcheck:
-#      test: ["CMD-SHELL", "curl --fail http://localhost:8000 || exit 1"]
-#      interval: 20s
-#      retries: 3
-#      start_period: 30s
-#      timeout: 10s
+    healthcheck:
+      test: ["CMD-SHELL", "curl --fail http://localhost:8000 || exit 1"]
+      interval: 20s
+      retries: 3
+      start_period: 30s
+      timeout: 10s
 
   mariadb:
     image: ${SEATABLE_DB_IMAGE:-mariadb:10.11.7-jammy}
