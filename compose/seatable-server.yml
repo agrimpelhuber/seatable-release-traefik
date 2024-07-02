@@ -35,21 +35,6 @@ services:
       - SEATABLE_HELP_LINK=${SEATABLE_HELP_LINK:-https://docs.seatable.io}
       - SEATABLE_LOG_LEVEL=${SEATABLE_LOG_LEVEL:-INFO}
     labels:
-          - "traefik.enable=true"
-      - "traefik.http.routers.traefik.rule=Host(`v78025.1blu.de`)"
-      - "traefik.http.routers.traefik.entrypoints=websecure,web"
-      - "traefik.http.routers.traefik.tls.certresolver=le-resolver"
-      - "traefik.http.routers.traefik.service=traefik"
-      - "traefik.http.services.traefik.loadbalancer.server.port=8080"
-      - "traefik.http.routers.traefik.middlewares=traefik-auth@docker,securityheaders@docker"
-      - "traefik.http.middlewares.traefik-auth.basicauth.users=webmonitor:$$apr1$$yGmyaqx9$$yievXaaIdeOreXQOIgmmL0"
-      - "traefik.http.middlewares.securityheaders.headers.frameDeny=true"
-      - "traefik.http.middlewares.securityheaders.headers.browserXssFilter=true"
-      - "traefik.http.middlewares.securityheaders.headers.contentTypeNosniff=true"
-      - "traefik.http.middlewares.securityheaders.headers.stsIncludeSubdomains=true"
-      - "traefik.http.middlewares.securityheaders.headers.stsPreload=true"
-      - "traefik.http.middlewares.securityheaders.headers.stsSeconds=31536000"
-
       traefik.enable: true
       traefik.docker.network: "${SEATABLE_FRONTEND_NET:-frontend-net}"
       traefik.http.routers.seatable.entrypoints: "websecure"
