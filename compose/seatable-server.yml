@@ -103,7 +103,7 @@ services:
       - MYSQL_LOG_CONSOLE=true
       - MARIADB_AUTO_UPGRADE=1
     volumes:
-      - "/opt/mariadb:/var/lib/mysql"
+      - "${SEATABLE_DB_DIR:-/opt/mariadb):/var/lib/mysql"
     networks:
       - backend-seatable-net
     healthcheck:
