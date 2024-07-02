@@ -70,11 +70,11 @@ services:
       # Allow iframes for some directories
       traefik.http.middlewares.allowheaders.headers.contentSecurityPolicy: ""
       traefik.http.middlewares.allowheaders.headers.customFrameOptionsValue: "ALLOWALL"
-      traefik.http.routers.seatable.entrypoints: websecure
-      traefik.http.routers.seatable.middlewares: securityheaders@docker,allowheaders@docker
-      traefik.http.routers.seatable.rule: Host(`${SEATABLE_SERVER_HOSTNAME:?Variable is not set or empty}`) && ( PathPrefix(`/dtable/view-external-links/`) ||  PathPrefix(`/dtable/external-links/`) ||  PathPrefix(`/dtable/external-apps/`) ||  PathPrefix(`/dtable/forms/`) )
-      traefik.http.routers.seatable.tls.certresolver: ${SEATABLE_TRAEFIK_CERTRESOLVER:?Variable is not set or empty}
-      traefik.http.services.seatable.loadbalancer.server.port: 80
+      traefik.http.routers.seatableallowed.entrypoints: websecure
+      traefik.http.routers.seatableallowed.middlewares: securityheaders@docker,allowheaders@docker
+      traefik.http.routers.seatableallowed.rule: Host(`${SEATABLE_SERVER_HOSTNAME:?Variable is not set or empty}`) && ( PathPrefix(`/dtable/view-external-links/`) ||  PathPrefix(`/dtable/external-links/`) ||  PathPrefix(`/dtable/external-apps/`) ||  PathPrefix(`/dtable/forms/`) )
+      traefik.http.routers.seatableallowed.tls.certresolver: ${SEATABLE_TRAEFIK_CERTRESOLVER:?Variable is not set or empty}
+      traefik.http.services.seatableallowed.loadbalancer.server.port: 80
 
     depends_on:
       mariadb:
