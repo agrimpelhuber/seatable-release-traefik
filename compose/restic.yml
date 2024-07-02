@@ -6,13 +6,13 @@ services:
     restart: unless-stopped
     init: true
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - /opt/seatable-compose:/data/seatable-compose:ro
-      - /opt/seatable-server/seatable:/data/seatable-server/seatable:ro
-      - /opt/restic/local:/local
-      - /opt/restic/restore:/restore
-      - /opt/restic/cache:/root/.cache/restic
-      - /opt/restic/logs:/var/log/
+      - /run/user/1000/docker.sock:/var/run/docker.sock
+      - ${RESTIC_COMPOSE_DIR:-/opt/seatable-compose}:/data/seatable-compose:ro
+      - ${SEATABLE_DATA_DIR:-/opt/seatable-server}/seatable:/data/seatable-server/seatable:ro
+      - ${RESTIC_DATA_DIR:-/opt/restic}/local:/local
+      - ${RESTIC_DATA_DIR:-/opt/restic}/restore:/restore
+      - ${RESTIC_DATA_DIR:-/opt/restic}/cache:/root/.cache/restic
+      - ${RESTIC_DATA_DIR:-/opt/restic}/logs:/var/log/
     environment:
       - TZ=${TIME_ZONE}
       - RESTIC_REPOSITORY=${RESTIC_REPOSITORY:-/local}
