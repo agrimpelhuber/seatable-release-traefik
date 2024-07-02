@@ -84,7 +84,7 @@ services:
       redis:
         condition: service_healthy
     networks:
-      - ${SEATABLE_FRONTEND_NET:-frontend-net}
+      - frontend-net
       - backend-seatable-net
     # healthcheck specifically for dtable-web
     healthcheck:
@@ -149,7 +149,7 @@ services:
       timeout: 5s
 
 networks:
-  ${SEATABLE_FRONTEND_NET:-frontend-net}:
+  frontend-net:
     name: ${SEATABLE_FRONTEND_NET:-frontend-net}
     external: ${SEATABLE_FRONTEND_EXT:-false}
   backend-seatable-net:
