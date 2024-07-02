@@ -1,9 +1,5 @@
 ---
 services:
-  caddy:
-    ports:
-      - ${N8N_PORT:-6231}:${N8N_PORT:-6231}
-
   n8n-postgres:
     image: ${N8N_POSTGRES_IMAGE:-postgres:11}
     restart: unless-stopped
@@ -15,8 +11,8 @@ services:
       - POSTGRES_NON_ROOT_USER=${POSTGRES_NON_ROOT_USER:-non_root_user}
       - POSTGRES_NON_ROOT_PASSWORD=${POSTGRES_NON_ROOT_PASSWORD:?Variable is not set or empty}
     volumes:
-      - "/opt/n8n-postgres:/var/lib/postgresql/data"
-      - "./n8n-init-data.sh:/docker-entrypoint-initdb.d/init-data.sh"
+      - "${N8N_DB_DIR:-/opt/n8n-postgres}:/var/lib/postgresql/data"
+      - "${N8N_DEF_DIR:-.}/n8n-init-data.sh:/docker-entrypoint-initdb.d/init-data.sh"
     healthcheck:
       test:
         [
@@ -49,7 +45,7 @@ services:
       - DB_POSTGRESDB_USER=${POSTGRES_NON_ROOT_USER:-non_root_user}
       - DB_POSTGRESDB_PASSWORD=${POSTGRES_NON_ROOT_PASSWORD}
     volumes:
-      - "/opt/n8n:/root/.n8n"
+      - "${N8N_DATA_DIR:-/opt/n8n}:/root/.n8n"
     labels:
       caddy: ${SEATABLE_SERVER_HOSTNAME}:${N8N_PORT:-6231}
       caddy.reverse_proxy: "{{upstreams 5678}}"
@@ -62,6 +58,6 @@ services:
 
 networks:
   frontend-net:
-    name: frontend-net
+    name: ${SEATABLE_FRONTEND_NET:-frontend-net}
   backend-n8n-net:
     name: backend-n8n-net
