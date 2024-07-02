@@ -35,13 +35,29 @@ services:
       - SEATABLE_HELP_LINK=${SEATABLE_HELP_LINK:-https://docs.seatable.io}
       - SEATABLE_LOG_LEVEL=${SEATABLE_LOG_LEVEL:-INFO}
     labels:
-      traefik.enable: "true"
-      traefik.docker.network: ${SEATABLE_FRONTEND_NET:-frontend-net}
-      traefik.http.routers.seatable.entrypoints: websecure
-      traefik.http.routers.seatable.middlewares: securityheaders@docker
-      traefik.http.routers.seatable.rule: Host(`${SEATABLE_SERVER_HOSTNAME:?Variable is not set or empty}`)
-      traefik.http.routers.seatable.tls.certresolver: ${SEATABLE_TRAEFIK_CERTRESOLVER:?Variable is not set or empty}
+          - "traefik.enable=true"
+      - "traefik.http.routers.traefik.rule=Host(`v78025.1blu.de`)"
+      - "traefik.http.routers.traefik.entrypoints=websecure,web"
+      - "traefik.http.routers.traefik.tls.certresolver=le-resolver"
+      - "traefik.http.routers.traefik.service=traefik"
+      - "traefik.http.services.traefik.loadbalancer.server.port=8080"
+      - "traefik.http.routers.traefik.middlewares=traefik-auth@docker,securityheaders@docker"
+      - "traefik.http.middlewares.traefik-auth.basicauth.users=webmonitor:$$apr1$$yGmyaqx9$$yievXaaIdeOreXQOIgmmL0"
+      - "traefik.http.middlewares.securityheaders.headers.frameDeny=true"
+      - "traefik.http.middlewares.securityheaders.headers.browserXssFilter=true"
+      - "traefik.http.middlewares.securityheaders.headers.contentTypeNosniff=true"
+      - "traefik.http.middlewares.securityheaders.headers.stsIncludeSubdomains=true"
+      - "traefik.http.middlewares.securityheaders.headers.stsPreload=true"
+      - "traefik.http.middlewares.securityheaders.headers.stsSeconds=31536000"
+
+      traefik.enable: true
+      traefik.docker.network: "${SEATABLE_FRONTEND_NET:-frontend-net}"
+      traefik.http.routers.seatable.entrypoints: "websecure"
+      traefik.http.routers.seatable.middlewares: "securityheaders@docker"
+      traefik.http.routers.seatable.rule: "Host(`${SEATABLE_SERVER_HOSTNAME:?Variable is not set or empty}`)"
+      traefik.http.routers.seatable.tls.certresolver: "${SEATABLE_TRAEFIK_CERTRESOLVER:?Variable is not set or empty}"
       traefik.http.services.seatable.loadbalancer.server.port: 80
+      traefik.http.routers.seatable.service: "seatable"
       # Max security middleware
       traefik.http.middlewares.securityheaders.headers.customFrameOptionsValue: "SAMEORIGIN"
       traefik.http.middlewares.securityheaders.headers.referrerPolicy: "same-origin"
@@ -70,12 +86,12 @@ services:
       # Allow iframes for some directories
       traefik.http.middlewares.allowheaders.headers.contentSecurityPolicy: ""
       traefik.http.middlewares.allowheaders.headers.customFrameOptionsValue: "ALLOWALL"
-      traefik.http.routers.seatableallowed.entrypoints: websecure
-      traefik.http.routers.seatableallowed.middlewares: securityheaders@docker,allowheaders@docker
-      traefik.http.routers.seatableallowed.rule: Host(`${SEATABLE_SERVER_HOSTNAME:?Variable is not set or empty}`) && ( PathPrefix(`/dtable/view-external-links/`) ||  PathPrefix(`/dtable/external-links/`) ||  PathPrefix(`/dtable/external-apps/`) ||  PathPrefix(`/dtable/forms/`) )
+      traefik.http.routers.seatableallowed.entrypoints: "websecure"
+      traefik.http.routers.seatableallowed.middlewares: "securityheaders@docker,allowheaders@docker"
+      traefik.http.routers.seatableallowed.rule: "Host(`${SEATABLE_SERVER_HOSTNAME:?Variable is not set or empty}`) && ( PathPrefix(`/dtable/view-external-links/`) ||  PathPrefix(`/dtable/external-links/`) ||  PathPrefix(`/dtable/external-apps/`) ||  PathPrefix(`/dtable/forms/`) )"
       traefik.http.routers.seatableallowed.tls.certresolver: ${SEATABLE_TRAEFIK_CERTRESOLVER:?Variable is not set or empty}
       traefik.http.services.seatableallowed.loadbalancer.server.port: 80
-
+      traefik.http.routers.seatableallowed.service: "seatableallowed"
     depends_on:
       mariadb:
         condition: service_healthy
