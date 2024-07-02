@@ -61,3 +61,5 @@ networks:
     external: ${SEATABLE_FRONTEND_EXT:-false}
   backend-scheduler-net:
     name: backend-scheduler-net
+  backend-seatable-net:
+    name: backend-seatable-net
