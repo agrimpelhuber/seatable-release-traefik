@@ -5,9 +5,9 @@ services:
     restart: unless-stopped
     container_name: seatable-server
     volumes:
-      - "/opt/seatable-server:/shared"
+      - "${SEATABLE_DATA_DIR:-/opt/seatable-server}:/shared"
       - type: bind
-        source: "./seatable-license.txt"
+        source: "${SEATABLE_LICENSE_FILE:-./seatable-license.txt}"
         target: "/shared/seatable/seatable-license.txt"
         read_only: ${SEATABLE_LICENSE_FORCE_READ_ONLY:-false}
     environment:
@@ -35,15 +35,22 @@ services:
       - SEATABLE_HELP_LINK=${SEATABLE_HELP_LINK:-https://docs.seatable.io}
       - SEATABLE_LOG_LEVEL=${SEATABLE_LOG_LEVEL:-INFO}
     labels:
-      caddy: ${SEATABLE_SERVER_PROTOCOL:-https}://${SEATABLE_SERVER_HOSTNAME:?Variable is not set or empty}
-      caddy.reverse_proxy: "{{upstreams 80}}"
-      # Default security headers
-      caddy.header.Strict-Transport-Security: "`max-age=31536000;`"
-      caddy.header.Referrer-Policy: "same-origin"
-      caddy.header.X-XSS-Protection: "`1; mode=block`"
-      caddy.header.X-Content-Type-Options: "nosniff"
-      caddy.header.X-Frame-Options: "SAMEORIGIN"
-      caddy.header.Content-Security-Policy: "`
+      traefik.enable: "true"
+      traefik.docker.network: ${SEATABLE_FRONTEND_NET:-frontend-net}
+      traefik.http.routers.seatable.entrypoints: websecure
+      traefik.http.routers.seatable.middlewares: securityheaders@docker
+      traefik.http.routers.seatable.rule: Host(`${SEATABLE_SERVER_HOSTNAME:?Variable is not set or empty}`)
+      traefik.http.routers.seatable.tls.certresolver: ${SEATABLE_TRAEFIK_CERTRESOLVER:?Variable is not set or empty}
+      traefik.http.services.seatable.loadbalancer.server.port: 80
+      # Max security middleware
+      traefik.http.middlewares.securityheaders.headers.customFrameOptionsValue: "SAMEORIGIN"
+      traefik.http.middlewares.securityheaders.headers.referrerPolicy: "same-origin"
+      traefik.http.middlewares.securityheaders.headers.browserXssFilter: "true"
+      traefik.http.middlewares.securityheaders.headers.contentTypeNosniff: "true"
+      traefik.http.middlewares.securityheaders.headers.stsIncludeSubdomains: "true"
+      traefik.http.middlewares.securityheaders.headers.stsPreload: "true"
+      traefik.http.middlewares.securityheaders.headers.stsSeconds: "31536000"
+      traefik.http.middlewares.securityheaders.headers.contentSecurityPolicy: "`
         block-all-mixed-content;
         default-src 'none';
         style-src 'unsafe-inline' 'self';
@@ -61,18 +68,13 @@ services:
         base-uri 'self'
         `"
       # Allow iframes for some directories
-      caddy.route_0: /dtable/view-external-links/*
-      caddy.route_0.header.X-Frame-Options: "ALLOWALL"
-      caddy.route_0.header.-Content-Security-Policy: ""
-      caddy.route_1: /dtable/external-links/*
-      caddy.route_1.header.X-Frame-Options: "ALLOWALL"
-      caddy.route_1.header.-Content-Security-Policy: ""
-      caddy.route_2: /dtable/external-apps/*
-      caddy.route_2.header.X-Frame-Options: "ALLOWALL"
-      caddy.route_2.header.-Content-Security-Policy: ""
-      caddy.route_3: /dtable/forms/*
-      caddy.route_3.header.X-Frame-Options: "ALLOWALL"
-      caddy.route_3.header.-Content-Security-Policy: ""
+      traefik.http.middlewares.allowheaders.headers.contentSecurityPolicy: ""
+      traefik.http.middlewares.allowheaders.headers.customFrameOptionsValue: "ALLOWALL"
+      traefik.http.routers.seatable.entrypoints: websecure
+      traefik.http.routers.seatable.middlewares: securityheaders@docker,allowheaders@docker
+      traefik.http.routers.seatable.rule: Host(`${SEATABLE_SERVER_HOSTNAME:?Variable is not set or empty}`) && ( PathPrefix(`/dtable/view-external-links/`) ||  PathPrefix(`/dtable/external-links/`) ||  PathPrefix(`/dtable/external-apps/`) ||  PathPrefix(`/dtable/forms/`) )
+      traefik.http.routers.seatable.tls.certresolver: ${SEATABLE_TRAEFIK_CERTRESOLVER:?Variable is not set or empty}
+      traefik.http.services.seatable.loadbalancer.server.port: 80
 
     depends_on:
       mariadb:
@@ -82,7 +84,7 @@ services:
       redis:
         condition: service_healthy
     networks:
-      - frontend-net
+      - ${SEATABLE_FRONTEND_NET:-frontend-net}
       - backend-seatable-net
     # healthcheck specifically for dtable-web
     healthcheck:
@@ -147,7 +149,8 @@ services:
       timeout: 5s
 
 networks:
-  frontend-net:
-    name: frontend-net
+  ${SEATABLE_FRONTEND_NET:-frontend-net}:
+    name: ${SEATABLE_FRONTEND_NET:-frontend-net}
+    external: ${SEATABLE_FRONTEND_EXT:-false}
   backend-seatable-net:
     name: backend-seatable-net
