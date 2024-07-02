@@ -13,7 +13,7 @@ services:
       - MKNOD
     environment:
       #- "aliasgroup1=" # comma separated list of domais, allowed to use collabora online. e.g. https://cloud.seatable.io
-      - "server_name=${SEATABLE_SERVER_HOSTNAME}:${COLLABORA_PORT:-6232}"
+      - "server_name=${COLLABORA_SERVER_HOSTNAME}:${COLLABORA_PORT:-6232}"
       - "username=${COLLABORA_ADMIN:-admin}"
       - "password=${COLLABORA_PW:-disabled_by_default}"
       - "DONT_GEN_SSL_CERT=true"
@@ -28,11 +28,18 @@ services:
     #volumes:
     #  - "${COLLABORA_PATH:-/opt/collabora}/logs:/opt/cool/logs/" # chmod 777 needed
     labels:
-      caddy: ${SEATABLE_SERVER_HOSTNAME}:${COLLABORA_PORT:-6232}
-      caddy.reverse_proxy: "{{upstreams 9980}}"
+      traefik.enable: true
+      traefik.docker.network: "${SEATABLE_FRONTEND_NET:-frontend-net}"
+      traefik.http.routers.collabora.entrypoints: "websecure"
+      traefik.http.routers.collabora.middlewares: "securityheaders@docker"
+      traefik.http.routers.collabora.rule: "Host(`${COLLABORA_SERVER_HOSTNAME:?Variable is not set or empty}`)"
+      traefik.http.routers.collabora.tls.certresolver: "${SEATABLE_TRAEFIK_CERTRESOLVER:?Variable is not set or empty}"
+      traefik.http.services.collabora.loadbalancer.server.port: ${COLLABORA_PORT:-9980}
+      traefik.http.routers.collabora.service: "collabora"
     networks:
       - frontend-net
 
 networks:
   frontend-net:
-    name: frontend-net
+    name: ${SEATABLE_FRONTEND_NET:-frontend-net}
+    external: ${SEATABLE_FRONTEND_EXT:-false}
