@@ -30,7 +30,7 @@ services:
       traefik.http.routers.collabora.middlewares: "securityheaders@docker"
       traefik.http.routers.collabora.rule: "Host(`${COLLABORA_SERVER_HOSTNAME:?Variable is not set or empty}`)"
       traefik.http.routers.collabora.tls.certresolver: "${SEATABLE_TRAEFIK_CERTRESOLVER:?Variable is not set or empty}"
-      traefik.http.services.collabora.loadbalancer.server.port: ${COLLABORA_PORT:-9980}
+      traefik.http.services.collabora.loadbalancer.server.port: ${COLLABORA_BACKEND_PORT:-9980}
       traefik.http.routers.collabora.service: "collabora"
     networks:
       - frontend-net
