@@ -1,4 +1,4 @@
-le---
+---
 services:
   python-scheduler:
     image: ${PYTHON_SCHEDULER_IMAGE:-seatable/seatable-python-scheduler:3.1.0}
