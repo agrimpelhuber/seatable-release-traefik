@@ -50,6 +50,7 @@ services:
       traefik.http.middlewares.seatableheaders.headers.stsIncludeSubdomains: "true"
       traefik.http.middlewares.seatableheaders.headers.stsPreload: "true"
       traefik.http.middlewares.seatableheaders.headers.stsSeconds: "31536000"
+      traefik.http.middlewares.seatableheaders.headers.customResponseHeaders.Server: "unknown server"
       traefik.http.middlewares.seatablestrict.headers.customFrameOptionsValue: "SAMEORIGIN"
       traefik.http.middlewares.seatablestrict.headers.contentSecurityPolicy: "`
         block-all-mixed-content;
