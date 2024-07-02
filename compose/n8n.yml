@@ -59,5 +59,6 @@ services:
 networks:
   frontend-net:
     name: ${SEATABLE_FRONTEND_NET:-frontend-net}
+    external: ${SEATABLE_FRONTEND_EXT:-false}
   backend-n8n-net:
     name: backend-n8n-net
