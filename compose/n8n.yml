@@ -46,6 +46,7 @@ services:
       - DB_POSTGRESDB_PASSWORD=${POSTGRES_NON_ROOT_PASSWORD}
     volumes:
       - "${N8N_DATA_DIR:-/opt/n8n}:/root/.n8n"
+      - "/etc/ssl/certs/ca-certificates.crt:/etc/ssl/certs/ca-certificates.crt:ro"
     labels:
       traefik.enable: true
       traefik.docker.network: "${SEATABLE_FRONTEND_NET:-frontend-net}"
