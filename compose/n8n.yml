@@ -47,8 +47,14 @@ services:
     volumes:
       - "${N8N_DATA_DIR:-/opt/n8n}:/root/.n8n"
     labels:
-      caddy: ${SEATABLE_SERVER_HOSTNAME}:${N8N_PORT:-6231}
-      caddy.reverse_proxy: "{{upstreams 5678}}"
+      traefik.enable: true
+      traefik.docker.network: "${SEATABLE_FRONTEND_NET:-frontend-net}"
+      traefik.http.routers.n8n.entrypoints: "websecure"
+      traefik.http.routers.n8n.middlewares: "securityheaders@docker"
+      traefik.http.routers.n8n.rule: "Host(`${N8N_SERVER_HOSTNAME:?Variable is not set or empty}`)"
+      traefik.http.routers.n8n.tls.certresolver: "${SEATABLE_TRAEFIK_CERTRESOLVER:?Variable is not set or empty}"
+      traefik.http.services.n8n.loadbalancer.server.port: ${N8N_PORT:-6231}
+      traefik.http.routers.n8n.service: "n8n"
     depends_on:
       n8n-postgres:
         condition: service_healthy
