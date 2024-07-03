@@ -8,7 +8,9 @@ services:
     cap_add:
       - MKNOD
     environment:
-      - "aliasgroup1=https://${ONLYOFFICE_SERVER_HOSTNAME},https://${SEATABLE_SERVER_HOSTNAME}" # comma separated list of domais, allowed to use collabora online. e.g. https://cloud.seatable.io
+      #- "aliasgroup1=" # comma separated list of domais, allowed to use collabora online. e.g. https://cloud.seatable.io
+      - "aliasgroup1=https://seatable.gebaer.de:443"
+      - "aliasgroup2=https://cloud.gebaer.de:443"
       - "server_name=${COLLABORA_SERVER_HOSTNAME}:${COLLABORA_PORT:-6232}"
       - "username=${COLLABORA_ADMIN:-admin}"
       - "password=${COLLABORA_PW:-disabled_by_default}"
