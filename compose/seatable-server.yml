@@ -79,7 +79,7 @@ services:
       traefik.http.routers.seatableallowed.tls.certresolver: ${TRAEFIK_CERTRESOLVER:?Variable is not set or empty}
       traefik.http.services.seatableallowed.loadbalancer.server.port: ${SEATABLE_UPSTREAM_PORT:-80}
       traefik.http.routers.seatableallowed.service: "seatableallowed"
-
+      # caddy
       caddy: ${SEATABLE_SERVER_PROTOCOL:-https}://${SEATABLE_SERVER_HOSTNAME:?Variable is not set or empty}
       caddy.reverse_proxy: "{{upstreams 80}}"
       # Default security headers
@@ -118,7 +118,6 @@ services:
       caddy.route_3: /dtable/forms/*
       caddy.route_3.header.X-Frame-Options: "ALLOWALL"
       caddy.route_3.header.-Content-Security-Policy: ""
-
     depends_on:
       mariadb:
         condition: service_healthy
