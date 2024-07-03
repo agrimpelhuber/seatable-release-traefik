@@ -182,6 +182,8 @@ services:
     image: ${SEATABLE_REDIS_IMAGE:-redis:7.2.4-bookworm}
     restart: unless-stopped
     container_name: redis
+    volumes:
+      - ${HOST_DATA_DIR}/seatable-redis:/data
     networks:
       - backend-seatable-net
     healthcheck:
