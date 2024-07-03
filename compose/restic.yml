@@ -23,8 +23,8 @@ services:
       - SEATABLE_BIGDATA_DUMP=${SEATABLE_BIGDATA_DUMP:-true}
       - LOG_TYPE=${LOG_TYPE:-stdout}
       - LOG_LEVEL=${RESTIC_LOG_LEVEL:-INFO}
-  networks:
-      backend-seatable-net:
+    networks:
+      - backend-seatable-net
 
 networks:
   backend-seatable-net:
