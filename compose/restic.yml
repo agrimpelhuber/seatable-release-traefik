@@ -26,6 +26,6 @@ services:
     networks:
       - backend-seatable-net
 
-networks:
-  backend-seatable-net:
-    external: true
+#networks:
+#  backend-seatable-net:
+#    external: true
