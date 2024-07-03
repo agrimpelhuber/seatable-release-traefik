@@ -36,7 +36,7 @@ services:
     restart: unless-stopped
     container_name: python-starter
     volumes:
-      - "/run/user/1000/docker.sock:/var/run/docker.sock"
+      - "${HOST_DOCKER_SOCKET:-/var/run/docker.sock}:/var/run/docker.sock"
       - "${PYTHON_TRANSFER_DIRECTORY_PATH:-/tmp}:${PYTHON_TRANSFER_DIRECTORY_PATH:-/tmp}"
     environment:
       - PYTHON_SCHEDULER_URL=${PYTHON_SCHEDULER_URL:-http://python-scheduler}
