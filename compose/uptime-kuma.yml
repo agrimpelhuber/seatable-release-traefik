@@ -15,6 +15,7 @@ services:
       traefik.http.routers.kuma.tls.certresolver: "${TRAEFIK_CERTRESOLVER:?Variable is not set or empty}"
       traefik.http.services.kuma.loadbalancer.server.port: ${UPTIMEKUMA_UPSTREAM_PORT:-3001}
       traefik.http.routers.kuma.service: "kuma"
+      # caddy
       caddy: ${UPTIMEKUMA_SERVER_HOSTNAME}:${UPTIMEKUMA_PORT:-6230}
       caddy.reverse_proxy: "{{upstreams 3001}}"
     networks:
