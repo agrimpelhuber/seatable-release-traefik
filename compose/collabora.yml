@@ -30,7 +30,7 @@ services:
       traefik.enable: true
       traefik.docker.network: "${TRAEFIK_FRONTEND_NET:-frontend-net}"
       traefik.http.routers.collabora.entrypoints: "websecure"
-      traefik.http.routers.collabora.middlewares: "securityheaders@docker"
+      traefik.http.routers.collabora.middlewares: "seatableheaders@docker,seatableallow@docker"
       traefik.http.routers.collabora.rule: "Host(`${COLLABORA_SERVER_HOSTNAME:?Variable is not set or empty}`)"
       traefik.http.routers.collabora.tls.certresolver: "${TRAEFIK_CERTRESOLVER:?Variable is not set or empty}"
       traefik.http.services.collabora.loadbalancer.server.port: ${COLLABORA_UPSTREAM_PORT:-9980}
