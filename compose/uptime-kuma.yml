@@ -7,8 +7,6 @@ services:
     volumes:
       - /opt/uptime-kuma:/app/data
     labels:
-      caddy: ${UPTIMEKUMA_SERVER_HOSTNAME}:${UPTIMEKUMA_PORT:-6230}
-      caddy.reverse_proxy: "{{upstreams 3001}}"
       traefik.enable: true
       traefik.docker.network: "${SEATABLE_FRONTEND_NET:-frontend-net}"
       traefik.http.routers.kuma.entrypoints: "websecure"
@@ -17,6 +15,8 @@ services:
       traefik.http.routers.kuma.tls.certresolver: "${TRAEFIK_CERTRESOLVER:?Variable is not set or empty}"
       traefik.http.services.kuma.loadbalancer.server.port: ${UPTIMEKUMA_UPSTREAM_PORT:-3001}
       traefik.http.routers.kuma.service: "kuma"
+      caddy: ${UPTIMEKUMA_SERVER_HOSTNAME}:${UPTIMEKUMA_PORT:-6230}
+      caddy.reverse_proxy: "{{upstreams 3001}}"
     networks:
       - frontend-net
 
