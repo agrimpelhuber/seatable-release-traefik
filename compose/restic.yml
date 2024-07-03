@@ -13,6 +13,7 @@ services:
       - ${RESTIC_DATA_DIR:-/opt/restic}/restore:/restore
       - ${RESTIC_DATA_DIR:-/opt/restic}/cache:/root/.cache/restic
       - ${RESTIC_DATA_DIR:-/opt/restic}/logs:/var/log/
+      - ${RESTIC_DATA_DIR:-/opt/restic}/data:/data
     environment:
       - TZ=${TIME_ZONE}
       - RESTIC_REPOSITORY=${RESTIC_REPOSITORY:-/local}
