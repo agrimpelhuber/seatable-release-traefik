@@ -37,11 +37,11 @@ services:
       - SEATABLE_LOG_LEVEL=${SEATABLE_LOG_LEVEL:-INFO}
     labels:
       traefik.enable: true
-      traefik.docker.network: "${SEATABLE_FRONTEND_NET:-frontend-net}"
+      traefik.docker.network: "${TRAEFIK_FRONTEND_NET:-frontend-net}"
       traefik.http.routers.seatable.entrypoints: "websecure"
       traefik.http.routers.seatable.middlewares: "seatableheaders@docker,seatablestrict@docker"
       traefik.http.routers.seatable.rule: "Host(`${SEATABLE_SERVER_HOSTNAME:?Variable is not set or empty}`)"
-      traefik.http.routers.seatable.tls.certresolver: "${SEATABLE_TRAEFIK_CERTRESOLVER:?Variable is not set or empty}"
+      traefik.http.routers.seatable.tls.certresolver: "${TRAEFIK_CERTRESOLVER:?Variable is not set or empty}"
       traefik.http.services.seatable.loadbalancer.server.port: ${SEATABLE_UPSTREAM_PORT:-80}
       traefik.http.routers.seatable.service: "seatable"
       # Max security middleware
@@ -76,7 +76,7 @@ services:
       traefik.http.routers.seatableallowed.entrypoints: "websecure"
       traefik.http.routers.seatableallowed.middlewares: "seatableheaders@docker,seatableallow@docker"
       traefik.http.routers.seatableallowed.rule: "Host(`${SEATABLE_SERVER_HOSTNAME:?Variable is not set or empty}`) && ( PathPrefix(`/dtable/view-external-links/`) ||  PathPrefix(`/dtable/external-links/`) ||  PathPrefix(`/dtable/external-apps/`) ||  PathPrefix(`/dtable/forms/`) )"
-      traefik.http.routers.seatableallowed.tls.certresolver: ${SEATABLE_TRAEFIK_CERTRESOLVER:?Variable is not set or empty}
+      traefik.http.routers.seatableallowed.tls.certresolver: ${TRAEFIK_CERTRESOLVER:?Variable is not set or empty}
       traefik.http.services.seatableallowed.loadbalancer.server.port: ${SEATABLE_UPSTREAM_PORT:-80}
       traefik.http.routers.seatableallowed.service: "seatableallowed"
     depends_on:
