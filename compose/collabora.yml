@@ -33,6 +33,9 @@ services:
       traefik.http.routers.collabora.tls.certresolver: "${TRAEFIK_CERTRESOLVER:?Variable is not set or empty}"
       traefik.http.services.collabora.loadbalancer.server.port: ${COLLABORA_UPSTREAM_PORT:-9980}
       traefik.http.routers.collabora.service: "collabora"
+      # caddy
+      caddy: ${SEATABLE_SERVER_HOSTNAME}:${COLLABORA_PORT:-6232}
+      caddy.reverse_proxy: "{{upstreams 9980}}"
     networks:
       - frontend-net
 
