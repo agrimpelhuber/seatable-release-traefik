@@ -6,6 +6,7 @@ services:
     container_name: uptime-kuma
     volumes:
       - ${UPTIMEKUMA_DATA_DIR:-/opt/uptime-kuma}:/app/data
+      - ${HOST_DOCKER_SOCKET:-/var/run/docker.sock}:/var/run/docker.sock:ro
     labels:
       traefik.enable: true
       traefik.docker.network: "${SEATABLE_FRONTEND_NET:-frontend-net}"
