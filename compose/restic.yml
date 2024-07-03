@@ -6,7 +6,7 @@ services:
     restart: unless-stopped
     init: true
     volumes:
-      - /run/user/1000/docker.sock:/var/run/docker.sock
+      - ${HOST_DOCKER_SOCKET:-/var/run/docker.sock}:/var/run/docker.sock
       - ${RESTIC_COMPOSE_DIR:-/opt/seatable-compose}:/data/seatable-compose:ro
       - ${SEATABLE_DATA_DIR:-/opt/seatable-server}/seatable:/data/seatable-server/seatable:ro
       - ${RESTIC_DATA_DIR:-/opt/restic}/local:/local
