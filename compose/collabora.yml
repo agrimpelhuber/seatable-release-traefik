@@ -9,7 +9,7 @@ services:
       - MKNOD
     environment:
       #- "aliasgroup1=" # comma separated list of domais, allowed to use collabora online. e.g. https://cloud.seatable.io
-      - "server_name=${COLLABORA_SERVER_HOSTNAME}:${COLLABORA_PORT:-6232}"
+      - "server_name=${COLLABORA_SERVER_HOSTNAME}:${COLLABORA_PORT:-6232},${ONLYOFFICE_SERVER_HOSTNAME}:${ONLYOFFICE_PORT:-6232}"
       - "username=${COLLABORA_ADMIN:-admin}"
       - "password=${COLLABORA_PW:-disabled_by_default}"
       - "DONT_GEN_SSL_CERT=true"
