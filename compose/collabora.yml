@@ -19,11 +19,11 @@ services:
       - extra_params=--o:admin_console.enable=${COLLABORA_ENABLE_ADMIN_CONSOLE:-false}
         --o:ssl.enable=false
         --o:ssl.termination=true
-        --o:net.proto=IPv4
         --o:user_interface.mode=classic
         --o:remote_font_config.url=${COLLABORA_REMOTE_FONT:-}
         --o:logging.file[@enable]=${COLLABORA_ENABLE_FILE_LOGGING:-false}
         --o:logging.file.property[0]=/opt/cool/logs/coolwsd.log
+    #    --o:net.proto=IPv4
     #volumes:
     #  - "${COLLABORA_PATH:-/opt/collabora}/logs:/opt/cool/logs/" # chmod 777 needed
     labels:
