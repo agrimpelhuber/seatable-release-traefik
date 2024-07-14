@@ -35,7 +35,7 @@ services:
       - N8N_PORT=5678
       - N8N_PROTOCOL=${N8N_PROTOCOL:-http}
       - NODE_ENV=production
-      - WEBHOOK_URL=${SEATABLE_SERVER_PROTOCOL:-https}://${SEATABLE_SERVER_HOSTNAME}:${N8N_PORT:-6231}/
+      - WEBHOOK_URL=${SEATABLE_SERVER_PROTOCOL:-https}://${N8N_SERVER_HOSTNAME}:${N8N_PORT:-6231}/
       - GENERIC_TIMEZONE=${TIME_ZONE}
       - N8N_ENCRYPTION_KEY=${N8N_ENCRYPTION_KEY:?Variable is not set or empty, might be already set in n8n config file}
       - DB_TYPE=postgresdb
