@@ -1,7 +1,7 @@
 ---
 services:
   seatable-server:
-    image: ${SEATABLE_IMAGE:-seatable/seatable-enterprise:4.4.9}
+    image: ${SEATABLE_IMAGE:-seatable/seatable-enterprise:5.0.7}
     restart: unless-stopped
     container_name: seatable-server
     volumes:
@@ -48,8 +48,8 @@ services:
         default-src 'none';
         style-src 'unsafe-inline' 'self';
         script-src 'unsafe-inline' 'unsafe-eval' 'self';
-        script-src-elem 'unsafe-inline' 'self' ${SEATABLE_SERVER_HOSTNAME}:${ONLYOFFICE_PORT:-6233} maps.googleapis.com;
-        font-src 'self' data:;
+        script-src-elem 'unsafe-inline' 'self' ${SEATABLE_SERVER_HOSTNAME}:${ONLYOFFICE_PORT:-6233} maps.googleapis.com unpkg.com;
+        font-src 'self' data: unpkg.com;
         img-src 'self' data: blob: https: market.seatable.io mt0.google.com maps.googleapis.com maps.gstatic.com;
         form-action 'self' ${SEATABLE_SERVER_HOSTNAME}:${COLLABORA_PORT:-6232};
         connect-src 'self' market.seatable.io https:;
