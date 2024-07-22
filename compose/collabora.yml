@@ -3,6 +3,9 @@ services:
   collabora:
     image: ${COLLABORA_IMAGE:-collabora/code:24.04.2.1.1}
     container_name: collabora
+    logging:
+      options:
+        max-size: ${MACHINE_MAXLOG}
     expose:
       - ${COLLABORA_BACKEND_PORT:-9980}
     cap_add:
