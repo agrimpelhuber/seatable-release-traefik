@@ -4,6 +4,9 @@ services:
     image: ${N8N_POSTGRES_IMAGE:-postgres:11}
     restart: unless-stopped
     container_name: n8n-postgres
+    logging:
+      options:
+        max-size: ${MACHINE_MAXLOG}
     environment:
       - POSTGRES_USER=${POSTGRES_USER:-root}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:?Variable is not set or empty}
