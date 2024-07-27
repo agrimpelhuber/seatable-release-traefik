@@ -3,6 +3,7 @@ services:
   collabora:
     image: ${COLLABORA_IMAGE:-collabora/code:24.04.2.1.1}
     container_name: collabora
+    privileged: true
     logging:
       options:
         max-size: ${MACHINE_MAXLOG}
