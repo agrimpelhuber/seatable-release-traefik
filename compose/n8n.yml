@@ -59,6 +59,7 @@ services:
       - EXECUTIONS_DATA_SAVE_MANUAL_EXECUTIONS=false
     volumes:
       - "${N8N_DATA_DIR:-/opt/n8n}:/root/.n8n"
+      - "${N8N_UPLOAD_DIR:-/opt/n8n/upload}:/root/n8n-upload:ro"
       - "/etc/ssl/certs/ca-certificates.crt:/etc/ssl/certs/ca-certificates.crt:ro"
     labels:
       traefik.enable: true
