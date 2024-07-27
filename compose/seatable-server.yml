@@ -53,7 +53,24 @@ services:
       traefik.http.middlewares.seatableheaders.headers.stsSeconds: "31536000"
       traefik.http.middlewares.seatableheaders.headers.customResponseHeaders.Server: "unknown server"
       traefik.http.middlewares.seatablestrict.headers.customFrameOptionsValue: "SAMEORIGIN"
-      traefik.http.middlewares.seatablestrict.headers.contentSecurityPolicy: "
+#      traefik.http.middlewares.seatablestrict.headers.contentSecurityPolicy: "
+#        block-all-mixed-content;
+#        default-src 'none';
+#        style-src 'unsafe-inline' 'self';
+#        script-src 'unsafe-inline' 'unsafe-eval' 'self';
+#        script-src-elem 'unsafe-inline' 'self' ${ONLYOFFICE_SERVER_HOSTNAME}:${ONLYOFFICE_PORT:-6233} maps.googleapis.com unpkg.com;
+#        font-src 'self' data: unpkg.com;
+#        img-src 'self' data: blob: https: market.seatable.io mt0.google.com maps.googleapis.com maps.gstatic.com;
+#        form-action 'self' ${COLLABORA_SERVER_HOSTNAME}:${COLLABORA_PORT:-6232};
+#        connect-src 'self' market.seatable.io https:;
+#        frame-src 'self' ${COLLABORA_SERVER_HOSTNAME}:${COLLABORA_PORT:-6232} ${ONLYOFFICE_SERVER_HOSTNAME}:${ONLYOFFICE_PORT:-6233};
+#        frame-ancestors 'self';
+#        worker-src 'self' blob:;
+#        manifest-src 'self';
+#        object-src 'self';
+#        base-uri 'self'
+#        "
+      traefik.http.middlewares.seatablestrict.headers.contentSecurityPolicy: >-
         block-all-mixed-content;
         default-src 'none';
         style-src 'unsafe-inline' 'self';
@@ -69,7 +86,6 @@ services:
         manifest-src 'self';
         object-src 'self';
         base-uri 'self'
-        "
       # Allow iframes for some directories
       traefik.http.middlewares.seatableallow.headers.contentSecurityPolicy: ""
       traefik.http.middlewares.seatableallow.headers.customFrameOptionsValue: "ALLOWALL"
