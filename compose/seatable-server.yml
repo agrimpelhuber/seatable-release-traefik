@@ -15,7 +15,7 @@ services:
       traefik.http.routers.tldraw.rule: "Host(`${SEATABLE_SERVER_HOSTNAME:?Variable is not set or empty}`) && PathPrefix(`/connect/`)"
       traefik.http.routers.tldraw.tls.certresolver: "${TRAEFIK_CERTRESOLVER:?Variable is not set or empty}"
       traefik.http.services.tldraw.loadbalancer.server.port: 5858
-      traefik.http.routers.seatable.service: "tldraw"
+      traefik.http.routers.traefik.service: "tldraw"
     networks:
       - frontend-net
     healthcheck:
