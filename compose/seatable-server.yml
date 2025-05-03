@@ -94,7 +94,7 @@ services:
         worker-src 'self' blob:;
         manifest-src 'self';
         object-src 'self';
-        base-uri 'self'
+        base-uri 'self';
       # Allow iframes for some directories
       traefik.http.middlewares.seatableallow.headers.contentSecurityPolicy: ""
       traefik.http.middlewares.seatableallow.headers.customFrameOptionsValue: "ALLOWALL"
@@ -128,7 +128,7 @@ services:
         worker-src 'self' blob:;
         manifest-src 'self';
         object-src 'self';
-        base-uri 'self'
+        base-uri 'self';
         `"
       # Allow iframes for some directories
       caddy.route_0: /dtable/view-external-links/*
