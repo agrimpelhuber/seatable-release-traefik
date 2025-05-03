@@ -13,7 +13,7 @@ services:
       traefik.docker.network: "${TRAEFIK_FRONTEND_NET:-frontend-net}"
       traefik.http.routers.tldraw.entrypoints: "websecure"
 #      traefik.http.routers.tldraw.middlewares: "seatableheaders@docker,seatablestrict@docker"
-      traefik.http.routers.tldraw.rule: "Host(`${SEATABLE_SERVER_HOSTNAME:?Variable is not set or empty}`) && PathPrefix(`/connect/`)"
+      traefik.http.routers.tldraw.rule: "Host(`${SEATABLE_SERVER_HOSTNAME:?Variable is not set or empty}`) && (PathPrefix(`/connect/`) || PathPrefix(`/upload/`))"
       traefik.http.routers.tldraw.tls.certresolver: "${TRAEFIK_CERTRESOLVER:?Variable is not set or empty}"
       traefik.http.services.tldraw.loadbalancer.server.port: 5858
       traefik.http.routers.tldraw.service: "tldraw"
