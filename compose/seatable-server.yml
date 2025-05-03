@@ -1,5 +1,30 @@
 ---
 services:
+  tldraw-worker:
+    image: ${TLDRAW_IMAGE:-seatable/tldraw-worker:2.0.1}
+    container_name: tldraw-worker
+    restart: unless-stopped
+    command: yarn docker
+    environment:
+      - SEATABLE_SERVER_URL=${SEATABLE_SERVER_PROTOCOL:-https}://${SEATABLE_SERVER_HOSTNAME:?Variable is not set or empty}
+    labels:
+      traefik.enable: true
+      traefik.docker.network: "${TRAEFIK_FRONTEND_NET:-frontend-net}"
+      traefik.http.routers.tldraw.entrypoints: "websecure"
+      traefik.http.routers.tldraw.middlewares: "seatableheaders@docker,seatablestrict@docker"
+      traefik.http.routers.tldraw.rule: "Host(`${SEATABLE_SERVER_HOSTNAME:?Variable is not set or empty}`) && PathPrefix(`/connect/`)"
+      traefik.http.routers.tldraw.tls.certresolver: "${TRAEFIK_CERTRESOLVER:?Variable is not set or empty}"
+      traefik.http.services.tldraw.loadbalancer.server.port: 5858
+      traefik.http.routers.seatable.service: "tldraw"
+    networks:
+      - frontend-net
+    healthcheck:
+      test: ["CMD-SHELL", "curl --fail http://localhost:5858/ping || exit 1"]
+      interval: 30s
+      retries: 3
+      start_period: 60s
+      timeout: 5s
+      
   seatable-server:
     image: ${SEATABLE_IMAGE:-seatable/seatable-enterprise:5.0.7}
     restart: unless-stopped
