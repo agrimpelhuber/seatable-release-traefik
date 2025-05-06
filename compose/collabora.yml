@@ -31,6 +31,7 @@ services:
     #volumes:
     #  - "${COLLABORA_PATH:-/opt/collabora}/logs:/opt/cool/logs/" # chmod 777 needed
     labels:
+      autoheal: true
       traefik.enable: true
       traefik.docker.network: "${TRAEFIK_FRONTEND_NET:-frontend-net}"
       traefik.http.routers.collabora.entrypoints: "websecure"
