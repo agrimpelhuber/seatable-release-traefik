@@ -44,7 +44,7 @@ services:
       caddy: ${SEATABLE_SERVER_HOSTNAME}:${COLLABORA_PORT:-6232}
       caddy.reverse_proxy: "{{upstreams 9980}}"
     healthcheck:
-      test: curl --fail http://localhost: ${COLLABORA_UPSTREAM_PORT:-9980} || exit 1
+      test: ['CMD-SHELL', 'curl --fail http://localhost: ${COLLABORA_UPSTREAM_PORT:-9980} || exit 1']
       interval: 60s
       retries: 5
       start_period: 20s
