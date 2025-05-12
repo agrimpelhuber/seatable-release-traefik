@@ -62,6 +62,7 @@ services:
       - "${N8N_UPLOAD_DIR:-/opt/n8n/upload}:/root/n8n-upload:ro"
       - "/etc/ssl/certs/ca-certificates.crt:/etc/ssl/certs/ca-certificates.crt:ro"
     labels:
+      autoheal: true
       traefik.enable: true
       traefik.docker.network: "${TRAEFIK_FRONTEND_NET:-frontend-net}"
       traefik.http.routers.n8n.entrypoints: "websecure"
@@ -73,6 +74,13 @@ services:
       # caddy
       caddy: ${SEATABLE_SERVER_HOSTNAME}:${N8N_PORT:-6231}
       caddy.reverse_proxy: "{{upstreams 5678}}"
+    healthcheck:
+#      test: ["CMD-SHELL", "pgrep -f n8n || exit 1"]
+      test: ['CMD-SHELL','wget -q -Y off -O /dev/null http://127.0.0.1 || exit 1']
+      interval: 30s
+      retries: 3
+      start_period: 30s
+      timeout: 5s
     depends_on:
       n8n-postgres:
         condition: service_healthy
