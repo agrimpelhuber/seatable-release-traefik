@@ -33,7 +33,7 @@ services:
     container_name: seatable-server
     volumes:
       - "${SEATABLE_DATA_DIR:-/opt/seatable-server}:/shared"
-      - "${SEATABLE_DATA_DIR:-/opt/seatable-server}/seatable-nginx.conf:/opt/seatable/conf/nginx.conf:ro"
+#      - "${SEATABLE_DATA_DIR:-/opt/seatable-server}/seatable-nginx.conf:/opt/seatable/conf/nginx.conf:ro"
       - type: bind
         source: "${SEATABLE_LICENSE_FILE:-./seatable-license.txt}"
         target: "/shared/seatable/seatable-license.txt"
