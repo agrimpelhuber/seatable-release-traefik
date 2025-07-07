@@ -41,6 +41,18 @@ services:
     environment:
       - DB_HOST=mariadb
       - DB_ROOT_PASSWD=${SEATABLE_MYSQL_ROOT_PASSWORD:?Variable is not set or empty}
+      - SEATABLE_MYSQL_DB_HOST=${MARIADB_HOST:-mariadb}
+      - SEATABLE_MYSQL_DB_PORT=${MARIADB_PORT:-3306}
+      - SEATABLE_MYSQL_DB_USER=root
+      - SEATABLE_MYSQL_DB_PASSWORD=${MARIADB_PASSWORD:?Variable is not set or empty}
+      - INIT_SEATABLE_MYSQL_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD:-${MARIADB_PASSWORD}}
+      - SEATABLE_MYSQL_DB_DTABLE_DB_NAME=dtable_db
+      - SEATABLE_MYSQL_DB_CCNET_DB_NAME=ccnet_db
+      - SEATABLE_MYSQL_DB_SEAFILE_DB_NAME=seafile_db
+      - REDIS_HOST=${REDIS_HOST:-redis}
+      - REDIS_PORT=${REDIS_PORT:-6379}
+      - REDIS_PASSWORD=${REDIS_PASSWORD:?Variable is not set or empty}
+      - JWT_PRIVATE_KEY=${JWT_PRIVATE_KEY:?Variable is not set or empty}      
       - SEATABLE_SERVER_HOSTNAME=${SEATABLE_SERVER_HOSTNAME:?Variable is not set or empty}
       - SEATABLE_SERVER_PROTOCOL=${SEATABLE_SERVER_PROTOCOL:-https}
       - SEATABLE_ADMIN_EMAIL=${SEATABLE_ADMIN_EMAIL:?Variable is not set or empty}
@@ -89,7 +101,7 @@ services:
         font-src 'self' data: unpkg.com cdn.tldraw.com;
         img-src 'self' data: blob: https: market.seatable.io mt0.google.com maps.googleapis.com maps.gstatic.com;
         form-action 'self' ${COLLABORA_SERVER_HOSTNAME}:${COLLABORA_PORT:-6232};
-        connect-src 'self' market.seatable.io https: ws: blob: data:;
+        connect-src 'self' market.seatable.io market.seatable.com https: ws: blob: data:;
         frame-src 'self' ${COLLABORA_SERVER_HOSTNAME}:${COLLABORA_PORT:-6232} ${ONLYOFFICE_SERVER_HOSTNAME}:${ONLYOFFICE_PORT:-6233};
         frame-ancestors 'self';
         worker-src 'self' blob:;
@@ -147,8 +159,8 @@ services:
     depends_on:
       mariadb:
         condition: service_healthy
-      memcached:
-        condition: service_healthy
+#      memcached:
+#        condition: service_healthy
       redis:
         condition: service_healthy
     networks:
@@ -167,9 +179,10 @@ services:
     restart: unless-stopped
     container_name: mariadb
     environment:
-      - MYSQL_ROOT_PASSWORD=${SEATABLE_MYSQL_ROOT_PASSWORD:?Variable is not set or empty}
+      - MYSQL_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD:-${MARIADB_PASSWORD}}
       - MYSQL_LOG_CONSOLE=true
       - MARIADB_AUTO_UPGRADE=1
+      - TIME_ZONE=${TIME_ZONE}
     volumes:
       - "${SEATABLE_DB_DIR:-/opt/mariadb}:/var/lib/mysql"
     networks:
@@ -191,23 +204,29 @@ services:
       # otherwise the container stays unhealthy.
       # more info at https://admin.seatable.io/upgrade/extra-upgrade-notice/
 
-  memcached:
-    image: ${SEATABLE_MEMCACHED_IMAGE:-memcached:1.6.27-bookworm}
-    restart: unless-stopped
-    container_name: memcached
-    entrypoint: memcached -m 256
-    networks:
-      - backend-seatable-net
-    healthcheck:
-      test: ["CMD-SHELL", "timeout 2 bash -c '</dev/tcp/localhost/11211'"]
-      interval: 20s
-      retries: 3
-      timeout: 5s
+#  memcached:
+#    image: ${SEATABLE_MEMCACHED_IMAGE:-memcached:1.6.27-bookworm}
+#    restart: unless-stopped
+#    container_name: memcached
+#    entrypoint: memcached -m 256
+#    networks:
+#      - backend-seatable-net
+#    healthcheck:
+#      test: ["CMD-SHELL", "timeout 2 bash -c '</dev/tcp/localhost/11211'"]
+#      interval: 20s
+#      retries: 3
+#      timeout: 5s
 
   redis:
     image: ${SEATABLE_REDIS_IMAGE:-redis:7.2.4-bookworm}
     restart: unless-stopped
     container_name: redis
+    environment:
+      - REDIS_PASSWORD=${REDIS_PASSWORD:?Variable is not set or empty}
+    command:
+      - /bin/sh
+      - -c
+      - redis-server --requirepass "$${REDIS_PASSWORD:?REDIS_PASSWORD variable is not set}"
     volumes:
       - ${HOST_DATA_DIR}/seatable-redis:/data
     networks:
