@@ -12,7 +12,7 @@ services:
       traefik.enable: true
       traefik.docker.network: "${TRAEFIK_FRONTEND_NET:-frontend-net}"
       traefik.http.routers.tldraw.entrypoints: "websecure"
-      traefik.http.routers.tldraw.middlewares: "brotli02@docker,tldraw-prefixing@docker"
+      traefik.http.routers.tldraw.middlewares: "brotliin@docker,brotliout@docker,tldraw-prefixing@docker"
       traefik.http.middlewares.tldraw-prefixing.stripprefix.prefixes: "/tldraw"
       traefik.http.routers.tldraw.rule: "Host(`${SEATABLE_SERVER_HOSTNAME:?Variable is not set or empty}`) && PathPrefix(`/tldraw`)"
       traefik.http.routers.tldraw.tls.certresolver: "${TRAEFIK_CERTRESOLVER:?Variable is not set or empty}"
@@ -80,7 +80,7 @@ services:
       traefik.enable: true
       traefik.docker.network: "${TRAEFIK_FRONTEND_NET:-frontend-net}"
       traefik.http.routers.seatable.entrypoints: "websecure"
-      traefik.http.routers.seatable.middlewares: "brotli02@docker,seatableheaders@docker,seatablestrict@docker"
+      traefik.http.routers.seatable.middlewares: "brotliin@docker,brotliout@docker,seatableheaders@docker,seatablestrict@docker"
       traefik.http.routers.seatable.rule: "Host(`${SEATABLE_SERVER_HOSTNAME:?Variable is not set or empty}`)"
       traefik.http.routers.seatable.tls.certresolver: "${TRAEFIK_CERTRESOLVER:?Variable is not set or empty}"
       traefik.http.services.seatable.loadbalancer.server.port: ${SEATABLE_UPSTREAM_PORT:-80}
@@ -114,7 +114,7 @@ services:
       traefik.http.middlewares.seatableallow.headers.contentSecurityPolicy: ""
       traefik.http.middlewares.seatableallow.headers.customFrameOptionsValue: "ALLOWALL"
       traefik.http.routers.seatableallowed.entrypoints: "websecure"
-      traefik.http.routers.seatableallowed.middlewares: "brotli02@docker,seatableheaders@docker,seatableallow@docker"
+      traefik.http.routers.seatableallowed.middlewares: "brotliin@docker,brotliout@docker,seatableheaders@docker,seatableallow@docker"
       traefik.http.routers.seatableallowed.rule: "Host(`${SEATABLE_SERVER_HOSTNAME:?Variable is not set or empty}`) && ( PathPrefix(`/dtable/view-external-links/`) ||  PathPrefix(`/dtable/external-links/`) ||  PathPrefix(`/dtable/external-apps/`) ||  PathPrefix(`/dtable/forms/`) )"
       traefik.http.routers.seatableallowed.tls.certresolver: ${TRAEFIK_CERTRESOLVER:?Variable is not set or empty}
       traefik.http.services.seatableallowed.loadbalancer.server.port: ${SEATABLE_UPSTREAM_PORT:-80}
