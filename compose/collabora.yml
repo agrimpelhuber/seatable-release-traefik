@@ -35,7 +35,7 @@ services:
       traefik.enable: true
       traefik.docker.network: "${TRAEFIK_FRONTEND_NET:-frontend-net}"
       traefik.http.routers.collabora.entrypoints: "websecure"
-#      traefik.http.routers.collabora.middlewares: "brotli02@docker,seatableheaders@docker,seatableallow@docker,collabora-host@docker"
+#      traefik.http.routers.collabora.middlewares: "brotliin@docker,brotliout@docker,seatableheaders@docker,seatableallow@docker,collabora-host@docker"
       traefik.http.routers.collabora.middlewares: "brotli02@docker"
       traefik.http.routers.collabora.rule: "Host(`${COLLABORA_SERVER_HOSTNAME:?Variable is not set or empty}`)"
       traefik.http.routers.collabora.tls.certresolver: "${TRAEFIK_CERTRESOLVER:?Variable is not set or empty}"
