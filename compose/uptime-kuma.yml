@@ -11,7 +11,7 @@ services:
       traefik.enable: true
       traefik.docker.network: "${SEATABLE_FRONTEND_NET:-frontend-net}"
       traefik.http.routers.kuma.entrypoints: "websecure"
-      traefik.http.routers.kuma.middlewares: "securityheaders@docker"
+      traefik.http.routers.kuma.middlewares: "brotliin@docker,brotliout@docker,securityheaders@docker"
       traefik.http.routers.kuma.rule: "Host(`${UPTIMEKUMA_SERVER_HOSTNAME:?Variable is not set or empty}`)"
       traefik.http.routers.kuma.tls.certresolver: "${TRAEFIK_CERTRESOLVER:?Variable is not set or empty}"
       traefik.http.services.kuma.loadbalancer.server.port: ${UPTIMEKUMA_UPSTREAM_PORT:-3001}
